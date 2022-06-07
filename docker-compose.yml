@@ -1,6 +1,7 @@
 version: '3'
 
 services:
+  
   zookeeper:
     image: wurstmeister/zookeeper
     container_name: zookeeper
@@ -15,6 +16,17 @@ services:
     environment:
       KAFKA_ADVERTISED_HOST_NAME: localhost
       KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+  
+  spark:
+    image: jupyter/all-spark-notebook:latest
+    container_name: jupyter-spark
+    restart: always
+    volumes:
+      - ./spark-notebooks:/home/jovyan/work
+    ports:
+      - 8888:8888
+      - 4040:4040
+      - 4041:4041
 
   postgres:
     image: postgres:latest
