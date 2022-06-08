@@ -12,6 +12,7 @@ peopleSchema = StructType([
 ])
 
 spark = SparkSession.builder.appName('file stream').getOrCreate()
+spark.sparkContext.setLogLevel('ERROR')
 
 def streamFile(srcFile, schema):
     streamDf = spark.readStream \

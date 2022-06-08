@@ -1,13 +1,15 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import *
 
-HOSTNAME = '192.168.2.35'
+HOSTNAME = '192.168.233.138'
 PORT = 9999
 
 spark = SparkSession.builder \
                     .appName('Streaming Aggregation') \
                     .master('local[2]') \
                     .getOrCreate()
+
+spark.sparkContext.setLogLevel('ERROR')
 
 def socketLines(host, port):
 

@@ -5,6 +5,7 @@ HOSTNAME = '192.168.2.35'
 PORT = 9999
 
 spark = SparkSession.builder.appName('socket streaming').getOrCreate()
+spark.sparkContext.setLogLevel('ERROR')
 
 def socketLines(HOSTNAME, PORT):
     lines = spark.readStream \
