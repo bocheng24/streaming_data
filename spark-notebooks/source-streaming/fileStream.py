@@ -7,7 +7,7 @@ peopleSchema = StructType([
     StructField('email', StringType(), True),
     StructField('city', StringType(), True),
     StructField('mac', StringType(), True),
-    StructField('timestamp', DateType(), True),
+    StructField('timestamp', StringType(), True),
     StructField('creditcard', StringType(), True)
 ])
 
