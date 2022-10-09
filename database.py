@@ -4,7 +4,7 @@ from faker import Faker
 from datetime import datetime
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:root@192.168.233.138:5532/eshop'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost:5432/store'
 db = SQLAlchemy(app)
 
 class User(db.Model):
