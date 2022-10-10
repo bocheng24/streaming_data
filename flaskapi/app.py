@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 
 app = Flask(__name__)
 
@@ -25,3 +25,47 @@ def get_stores():
         'status': 'Success',
         'data': stores
     }
+
+@app.post('/store')
+def create_store():
+
+    req_data = request.get_json()
+
+    new_store = {
+        'name': req_data['name'],
+        'items': []
+    }
+
+    stores.append(new_store)
+
+    return new_store, 201
+
+@app.post('/store/<string:name>/item')
+def add_item(name):
+    req_data = request.get_json()
+    for store in stores:
+        if name == store['name']:
+
+            new_item = {'name': req_data['name'], 'price': req_data['price']}
+            store['items'].append(new_item)
+            return new_item
+        
+        return {'message': 'Store not found'}, 404
+
+@app.get('/store/<string:name>')
+def get_store(name):
+
+    for store in stores:
+        if name == store['name']:
+            return store
+    
+    return {'message': 'Store not found'}, 404
+
+@app.get('/store/<string:name>/items')
+def get_store_items(name):
+
+    for store in stores:
+        if name == store['name']:
+            return {'items': store['items']}, 200
+
+    return {'message': 'Store not found'}, 404
