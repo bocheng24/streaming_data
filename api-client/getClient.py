@@ -5,8 +5,8 @@ PORT = '5000'
 
 BASE_URL = f'http://{HOST}:{PORT}/'
 
-stores = requests.get(f'{BASE_URL}/stores').json()
+stores = requests.get(f'{BASE_URL}/store').json()
 print(stores)
 
-items = requests.get(f'{BASE_URL}/items').json()
+items = requests.get(f'{BASE_URL}/item').json()
 print(items)
