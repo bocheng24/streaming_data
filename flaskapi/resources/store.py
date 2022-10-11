@@ -20,8 +20,8 @@ class StoreList(MethodView):
     @blp.arguments(StoreSchema)
     @blp.response(200, StoreSchema)
     def post(self, store_data):
-
-        for store in stores:
+    
+        for store in stores.values():
             if store_data['name'] == store['name']:
                 abort(404, {'message': 'This store has been created'})
 
