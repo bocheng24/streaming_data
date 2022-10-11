@@ -3,7 +3,10 @@ import uuid
 from flask import request
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
+
 from db import stores
+from schemas import StoreSchema
+
 
 blp = Blueprint('stores', __name__, description = 'API Operations on stores')
 
@@ -14,14 +17,10 @@ class StoreList(MethodView):
             'stores': list(stores.values())
         }
 
-    def post(self):
-        store_data = request.get_json()
-
-        if 'name' not in store_data:
-            abort(404, {'message': "Bad request! Make sure that 'name' is included."})
+    @blp.arguments(StoreSchema)
+    def post(self, store_data):
 
         for store in stores:
-
             if store_data['name'] == store['name']:
                 abort(404, {'message': 'This store has been created'})
 
@@ -33,7 +32,7 @@ class StoreList(MethodView):
 
         stores[new_id] = new_store
 
-        return new_store, 201
+        return new_store
 
 @blp.route('/store/<string:store_id>')
 class Store(MethodView):

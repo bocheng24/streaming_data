@@ -3,6 +3,7 @@ from flask import request
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from db import items, stores
+from schemas import ItemSchema, ItemUpdateSchema
 
 blp = Blueprint('items', __name__, description = 'API Operations on Items')
 
@@ -11,26 +12,20 @@ class ItemList(MethodView):
 
     def get(self):
         return {'items': list(items.values())}
+    
+    @blp.arguments(ItemSchema)
+    def post(self, item_data):
 
-    def post(self):
-        item_data = request.get_json()
-
-        if 'store_id' not in item_data:
-            abort(500, {'message': 'Internal Error, cannot find any store id'})
-
+        # Check if item already exisits
         for item in items.values():
             if item_data['name'] == item['name'] and item_data['store_id'] == item['store_id']:
                 abort(404, {'message': {'Item already exists'}})
 
-        if item_data['store_id'] in stores:
-            new_id = uuid.uuid4().hex
-            new_item = {'id': new_id, **item_data}
+        new_id = uuid.uuid4().hex
+        new_item = {'id': new_id, **item_data}
+        items[new_id] = new_item
 
-            items[new_id] = new_item
-
-            return new_item, 201
-
-        return abort(404, {'message': 'Store not found'})
+        return new_item
 
 @blp.route('/item/<string:item_id>')
 class Item(MethodView):
@@ -42,11 +37,8 @@ class Item(MethodView):
         except KeyError:
             abort(404, {'message': 'Item not found'})
 
-    def put(self, item_id):
-        item_up = request.get_json()
-
-        if 'name' not in item_up or 'price' not in item_up:
-            abort(404, {'message': "Bad request. Ensure 'price', and 'name' are included in the JSON payload."})
+    @blp.arguments(ItemUpdateSchema)
+    def put(self, item_up, item_id):
         
         try:
             items[item_id] |= item_up
