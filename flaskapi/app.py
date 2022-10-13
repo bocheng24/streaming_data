@@ -2,6 +2,7 @@ import os
 
 from flask import Flask
 from flask_smorest import Api
+from flask_migrate import Migrate
 from resources.store import blp as StoreBLP
 from resources.item import blp as ItemBLP
 
@@ -22,6 +23,7 @@ def create_app(db_url = None):
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     db.init_app(app)
+    migrate = Migrate(app, db)
 
     @app.before_first_request
     def create_tables():
