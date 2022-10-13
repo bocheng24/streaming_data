@@ -1,4 +1,5 @@
 venv/
 __pycache__/
 spark-notebooks/.ipynb_checkpoints/
-flaskapi/__pycache__/
+*.db
+playground/

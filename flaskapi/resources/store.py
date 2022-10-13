@@ -3,9 +3,10 @@ import uuid
 from flask import request
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
-
-from db import stores
 from schemas import StoreSchema
+from db import db
+from models import StoreModel
+from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 
 
 blp = Blueprint('stores', __name__, description = 'API Operations on stores')
@@ -15,23 +16,23 @@ class StoreList(MethodView):
 
     @blp.response(200, StoreSchema(many = True))
     def get(self):
-        return stores.values()
+        return StoreModel.query.all()
 
     @blp.arguments(StoreSchema)
     @blp.response(200, StoreSchema)
     def post(self, store_data):
-    
-        for store in stores.values():
-            if store_data['name'] == store['name']:
-                abort(404, {'message': 'This store has been created'})
 
-        new_id = uuid.uuid4().hex
-        new_store = {
-            'id': new_id,
-            **store_data
-        }
+        new_store = StoreModel(**store_data)
 
-        stores[new_id] = new_store
+        try:
+            db.session.add(new_store)
+            db.session.commit()
+
+        except IntegrityError:
+            abort(400, message = "Store already exists")
+            
+        except SQLAlchemyError as e:
+            abort(500, message = str(e))
 
         return new_store
 
@@ -40,21 +41,13 @@ class Store(MethodView):
 
     @blp.response(200, StoreSchema)
     def get(self, store_id):
-        try:
-            return stores[store_id]
-
-        except KeyError:
-            abort(404, {'message': 'Store not found'})
+        store = StoreModel.query.get_or_404(store_id)
+        return store
 
     def delete(self, store_id):
-        try:
-            store = stores[store_id]
-            del stores[store_id]
-            return {
-                'message': f'{store_id} deleted',
-                'data': store
-            }
+        store = StoreModel.query.get_or_404(store_id)
+        db.session.delete(store)
+        db.session.commit()
 
-        except:
-            abort(404, {'message': 'Store not found'})  
+        return {'message': 'Store deleted'}
 
