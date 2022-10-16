@@ -1,3 +1,3 @@
 FLASK_APP=app
 FLASK_DEBUG=1
-DATABASE_URI=postgresql://postgres:postgres@localhost:5432/store
+DATABASE_URI=mysql+pymysql://mysqluser:mysqlpwd@localhost:3306/storedb

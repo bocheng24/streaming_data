@@ -16,9 +16,9 @@ producer = KafkaProducer(
 if __name__ == '__main__':
 
     i = 0
-    while i < 10:
-        user = get_user()
+    while i < 30:
+        user = get_user(i)
         producer.send(TOPIC, user)
         print(user)
         i += 1
-        time.sleep(3)
+        time.sleep(1 / 1000)

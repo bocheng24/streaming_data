@@ -2,13 +2,27 @@ version: '3'
 
 services:
 
-  postgres:
+  pg_stage:
     image: postgres:latest
     container_name: pg_stage
+    restart: always
     ports:
       - "5432:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: store
+
+  mysqlbinlog:
+    image: quay.io/debezium/example-mysql:1.9
+    container_name: mysqlbinlog
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_USER: mysqluser
+      MYSQL_PASSWORD: mysqlpwd
+      MYSQL_DATABASE: storedb
+      MYSQL_ROOT_PASSWORD: debezium
+
     

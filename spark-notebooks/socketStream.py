@@ -1,7 +1,7 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import *
 
-HOSTNAME = '192.168.2.35'
+HOSTNAME = '127.0.0.1'
 PORT = 9999
 
 spark = SparkSession.builder.appName('socket streaming').getOrCreate()

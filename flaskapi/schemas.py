@@ -4,11 +4,13 @@ from marshmallow import fields, Schema
 class PlainStoreSchema(Schema):
     id = fields.Str(dump_only = True)
     name = fields.Str(required = True)
+    created_time = fields.DateTime()
 
 class PlainItemSchema(Schema):
     id = fields.Str(dump_only = True)
     name = fields.Str(required = True)
     price = fields.Float(required = True)
+    created_time = fields.DateTime()
 
 class ItemUpdateSchema(Schema):
     name = fields.Str()
